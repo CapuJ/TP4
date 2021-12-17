@@ -109,28 +109,19 @@ fenetre = Tk()
 fenetre.title("Space invaders")
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
-jeu = Canvas(fenetre, bg= 'black', width=Largeur, height=Hauteur)
+jeu = Canvas(fenetre, bg= 'dark blue', width=Largeur, height=Hauteur)
 jeu.grid(row=1, column= 0, rowspan=2)
-bouton_recommencer = Button(fenetre, text="New game")
+bouton_recommencer = Button(fenetre, text="New game", activebackground="cyan", background="green")
 bouton_recommencer.grid(row=1, column=1)
-bouton_quitter = Button(fenetre, text="Quit", command=fenetre.destroy)
+bouton_quitter = Button(fenetre, text="Quit Game", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
 
-alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill='white')
+alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill="green")
 deplacement_alien()
 
 fenetre.after(1000, creer_tir_alien)
 
-vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
-
-def Clavier(event):
-    global PosX, PosY
-    touche = event.keysym
-    if touche =='Right':
-        PosX += 20
-    if touche =='Left':
-        PosX -= 20
-    jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10)
+vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='dark cyan', fill='cyan')
 
 
 jeu.focus_set()
