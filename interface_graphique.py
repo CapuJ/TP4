@@ -17,8 +17,16 @@ y0_alien = 10
 x1_alien = 30
 y1_alien = 40
 rayon  = 15
+sens = 1
+pas = 1
 
-
+def deplacement_alien():
+    print("1")
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, sens
+    x0_alien = x0_alien + sens * pas
+    x1_alien = x1_alien + sens * pas 
+    jeu.coords(alien, x0_alien, y0_alien, x1_alien, y1_alien)
+    fenetre.after(20, deplacement_alien)
 
 
 
@@ -37,5 +45,6 @@ bouton_quitter = Button(fenetre, text="Quit", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
 
 alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill='white')
+deplacement_alien()
 
 fenetre.mainloop()
