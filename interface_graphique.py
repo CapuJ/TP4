@@ -12,6 +12,16 @@ from tkinter import Button, Tk, Canvas
 
 #Programme principal
 
+x0_alien = 0
+y0_alien = 10
+x1_alien = 30
+y1_alien = 40
+rayon  = 15
+
+
+
+
+
 
 
 fenetre = Tk()
@@ -27,3 +37,9 @@ bouton_quitter.pack(side='top', padx=5, pady=10)
 fenetre.mainloop()
 
 
+<<<<<<< HEAD
+=======
+alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill='white')
+
+fenetre.mainloop()
+>>>>>>> f4d00cd8ff4797ae7db52f4dc98d68a3395a8ddc
