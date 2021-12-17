@@ -16,7 +16,7 @@ from tkinter import Button, Label, Tk, Canvas
 
 fenetre = Tk()
 
-
+fenetre.title("Space invaders")
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
 jeu = Canvas(fenetre, bg= 'black')
@@ -25,4 +25,5 @@ bouton_recommencer = Button(fenetre, text="New game")
 bouton_recommencer.grid(row=1, column=1)
 bouton_quitter = Button(fenetre, text="Quit", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
+
 fenetre.mainloop()
