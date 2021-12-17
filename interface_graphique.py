@@ -52,7 +52,6 @@ deplacement_alien()
 
 
 
-
 Vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
 
 def Clavier(event):
