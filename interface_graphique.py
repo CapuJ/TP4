@@ -8,7 +8,7 @@ Interface du jeu Space Invaders
 #Importation des modules nécessaires
 from tkinter import Button, Label, Tk, Canvas
 
-#Programme principal
+# Initialisation
 
 x0_alien = 0
 y0_alien = 10
@@ -23,15 +23,17 @@ PosY=300
 Largeur=480
 Hauteur=320
 
+
+#Programme principal
+
 def deplacement_alien():
-    print("1")
     global x0_alien, y0_alien, x1_alien, y1_alien, rayon, sens
+    if (x0_alien + sens * pas) < 0 or (x1_alien + sens * pas) > Largeur:
+        sens *= -1
     x0_alien = x0_alien + sens * pas
     x1_alien = x1_alien + sens * pas 
     jeu.coords(alien, x0_alien, y0_alien, x1_alien, y1_alien)
     fenetre.after(20, deplacement_alien)
-
-
 
 fenetre = Tk()
 fenetre.title("Space invaders")
