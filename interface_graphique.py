@@ -16,13 +16,16 @@ x1_alien = 30
 y1_alien = 40
 rayon  = 15
 sens = 1
-pas = 1
+pas = 10
 
-PosX=230
-PosY=300
 Largeur=480
 Hauteur=320
 
+PosX=Largeur/2
+PosY=Hauteur-15
+
+xtir=PosX-10
+ytir=PosY+10
 
 #Programme principal
 
@@ -35,6 +38,28 @@ def deplacement_alien():
     jeu.coords(alien, x0_alien, y0_alien, x1_alien, y1_alien)
     fenetre.after(20, deplacement_alien)
 
+
+def Clavier(event):
+    global PosX, PosY, ytir, xtir
+    touche = event.keysym
+    if touche =='Right':
+        PosX += 20
+        xtir +=20
+        if PosX>Largeur:
+            PosX=0
+            xtir=PosX-10
+    if touche =='Left':
+        PosX -= 20 
+        xtir -= 20
+        if PosX<0:
+            PosX=Largeur
+            xtir=Largeur-10
+    if touche =='space':
+        ytir -= 20
+        
+    jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
+    jeu.coords(tir, PosX, PosY-10, xtir+10, ytir+10)
+    
 fenetre = Tk()
 fenetre.title("Space invaders")
 score = Label(fenetre, text='Score:')
@@ -49,31 +74,18 @@ bouton_quitter.grid(row=2, column=1)
 alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill='white')
 deplacement_alien()
 
-
-
-
-
-
-Vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
-
-def Clavier(event):
-    global PosX, PosY
-    touche = event.keysym
-    print(touche)
-    if touche =='Right':
-        PosX += 20
-        if PosX>Largeur:
-            PosX=0
-    if touche =='Left':
-        PosX -= 20
-        if PosX<0:
-            PosX=Largeur
-    jeu.coords(Vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
-    
-    
-
+vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
+
+#def tir():
+#    vaisseau.getcoords
+
+tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
+
+
+
+
 
 
 
