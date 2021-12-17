@@ -21,12 +21,17 @@ pas_x = 2
 pas_y = 15
 tirs_alien  =[]
 
-PosX=230
-PosY=300
 Largeur=480
 Hauteur=320
 
 # Fonctions
+PosX=Largeur/2
+PosY=Hauteur-15
+
+xtir=PosX-10
+ytir=PosY+10
+
+#Programme principal
 
 def deplacement_alien():
     global x0_alien, y0_alien, x1_alien, y1_alien, rayon, sens, PosX, PosY
@@ -38,7 +43,7 @@ def deplacement_alien():
     x1_alien = x1_alien + sens * pas_x 
     jeu.coords(alien, x0_alien, y0_alien, x1_alien, y1_alien)
     if (PosY - 10 < y1_alien < PosY + 10) and ((PosX - 10 < x0_alien< PosX + 10 ) or (PosX - 10 < x1_alien < PosX + 10)):
-        jeu.delete(Vaisseau)
+        jeu.delete(vaisseau)
         messagebox.showinfo('', 'Vous avez perdu !')
     else:
         fenetre.after(20, deplacement_alien)
@@ -66,6 +71,41 @@ def deplacement_tir_alien():
 
 #Programme principal
 
+
+def deplacement_tir():
+    global ytir, rayon, sens, pas
+    tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
+    ytir -= 10
+    jeu.coords(tir, PosX, ytir-10, xtir+10, ytir+10)
+    fenetre.after(20, deplacement_tir)
+
+
+
+def Clavier(event):
+    global PosX, PosY, xtir #,ytir
+    touche = event.keysym
+    if touche =='Right':
+        PosX += 20
+        xtir +=20
+        if PosX>Largeur:
+            PosX=0
+            xtir=PosX-10
+    if touche =='Left':
+        PosX -= 20 
+        xtir -= 20
+        if PosX<0:
+            PosX=Largeur
+            xtir=Largeur-10
+    if touche =='space':
+        deplacement_tir()
+        #if ytir<200:
+           # jeu.delete(tir)
+        
+    jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
+    
+
+
+
 fenetre = Tk()
 fenetre.title("Space invaders")
 score = Label(fenetre, text='Score:')
@@ -82,7 +122,7 @@ deplacement_alien()
 
 fenetre.after(1000, creer_tir_alien)
 
-Vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
+vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
 
 def Clavier(event):
     global PosX, PosY
@@ -91,11 +131,14 @@ def Clavier(event):
         PosX += 20
     if touche =='Left':
         PosX -= 20
-    jeu.coords(Vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
+    jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10)
 
 
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
+
+
+#tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
 
 
 
