@@ -41,7 +41,6 @@ def deplacement_alien():
 
 def deplacement_tir():
     global ytir, rayon, sens, pas
-    tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
     ytir -= 10
     jeu.coords(tir, PosX, ytir-10, xtir+10, ytir+10)
     fenetre.after(20, deplacement_tir)
@@ -95,6 +94,7 @@ jeu.bind('<Key>', Clavier)
 #tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
 
 
+tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
 
 
 fenetre.mainloop() 
