@@ -61,10 +61,15 @@ def Clavier(event):
     print(touche)
     if touche =='Right':
         PosX += 20
+        if PosX>Largeur:
+            PosX=0
     if touche =='Left':
         PosX -= 20
+        if PosX<0:
+            PosX=Largeur
     jeu.coords(Vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
-
+    
+    
 
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
