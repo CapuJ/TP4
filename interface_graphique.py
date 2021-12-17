@@ -6,21 +6,25 @@ Interface du jeu Space Invaders
 """
 
 #Importation des modules nécessaires
-from tkinter import Button, Label, Tk, Canvas
+from tkinter import Button, Label, Tk, Canvas, messagebox
 
 # Initialisation
 
+tir_alien = None
 x0_alien = 0
 y0_alien = 10
 x1_alien = 30
 y1_alien = 40
 rayon  = 15
 sens = 1
-pas = 10
+pas_x = 2
+pas_y = 15
+tirs_alien  =[]
 
 Largeur=480
 Hauteur=320
 
+# Fonctions
 PosX=Largeur/2
 PosY=Hauteur-15
 
@@ -30,13 +34,42 @@ ytir=PosY+10
 #Programme principal
 
 def deplacement_alien():
-    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, sens
-    if (x0_alien + sens * pas) < 0 or (x1_alien + sens * pas) > Largeur:
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, sens, PosX, PosY
+    if (x0_alien + sens * pas_x) < 0 or (x1_alien + sens * pas_x) > Largeur:
         sens *= -1
-    x0_alien = x0_alien + sens * pas
-    x1_alien = x1_alien + sens * pas 
+        y0_alien = y0_alien + pas_y
+        y1_alien = y1_alien + pas_y
+    x0_alien = x0_alien + sens * pas_x
+    x1_alien = x1_alien + sens * pas_x 
     jeu.coords(alien, x0_alien, y0_alien, x1_alien, y1_alien)
-    fenetre.after(20, deplacement_alien)
+    if (PosY - 10 < y1_alien < PosY + 10) and ((PosX - 10 < x0_alien< PosX + 10 ) or (PosX - 10 < x1_alien < PosX + 10)):
+        jeu.delete(vaisseau)
+        messagebox.showinfo('', 'Vous avez perdu !')
+    else:
+        fenetre.after(20, deplacement_alien)
+
+def creer_tir_alien():
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, tir_alien
+    longueur_tir_alien = 20
+    x_tir = x0_alien + rayon
+    y0_tir = y1_alien
+    y1_tir = y1_alien + longueur_tir_alien
+    tir_alien = jeu.create_line(x_tir, y0_tir, x_tir, y1_tir, fill='yellow')
+    deplacement_tir_alien()
+    
+def deplacement_tir_alien():
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, tir_alien
+    x0_tir, y0_tir, x1_tir, y1_tir = jeu.coords(tir_alien)
+    y0_tir += 10
+    y1_tir += 10
+    jeu.coords(tir_alien, x0_tir, y0_tir, x1_tir, y1_tir)
+
+
+
+    
+    
+
+#Programme principal
 
 
 def deplacement_tir():
@@ -86,7 +119,20 @@ bouton_quitter.grid(row=2, column=1)
 alien = jeu.create_oval(x0_alien, y0_alien, x1_alien, y1_alien, fill='white')
 deplacement_alien()
 
+fenetre.after(1000, creer_tir_alien)
+
 vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='blue', fill='blue')
+
+def Clavier(event):
+    global PosX, PosY
+    touche = event.keysym
+    if touche =='Right':
+        PosX += 20
+    if touche =='Left':
+        PosX -= 20
+    jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10)
+
+
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
 
