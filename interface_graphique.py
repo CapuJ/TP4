@@ -15,10 +15,11 @@ from tkinter import Button, Tk, Canvas
 
 
 fenetre = Tk()
+fenetre.title("Space invaders")
 jeu = Canvas(fenetre, bg= 'black')
-jeu.pack()
+jeu.pack(side='left')
 bouton_recommencer = Button(fenetre, text="New game")
-bouton_recommencer.pack()
+bouton_recommencer.pack(side='bottom', padx=5)
 bouton_quitter = Button(fenetre, text="Quit", command=fenetre.destroy)
-bouton_quitter.pack()
+bouton_quitter.pack(side='top', padx=5, pady=10)
 fenetre.mainloop()
