@@ -134,4 +134,3 @@ tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
 
 
 fenetre.mainloop() 
-
