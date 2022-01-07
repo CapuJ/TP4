@@ -9,11 +9,13 @@ Interface du jeu Space Invaders
 from tkinter import Button, Label, Tk, Canvas, messagebox
 from random import randint
 from time import sleep
+import structure_file as fl
 # Initialisation
 
 Largeur=480
 Hauteur=320
-
+tirs_alien = []
+tirs_vaisseau = []
 class alien:
     def __init__(self, x0, y0, x1, y1, rayon, sens, jeu):
         self.x0 = x0
@@ -36,7 +38,7 @@ class alien:
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu)]
         delai = randint(2000, 5000)
-        fenetre.after(delai, alien1.tir, tirs_alien, jeu)
+        jeu.after(delai, self.tir, tirs_alien, jeu)
         
 class tir_alien:
     def __init__(self, alien, longueur, jeu):
@@ -49,13 +51,53 @@ class tir_alien:
         self.y0 += 10
         self.y1 += 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        fenetre.after(20, self.deplacement, jeu)
+        jeu.after(20, self.deplacement, jeu)
+
+class vaisseau:
+    def __init__(self,jeu):
+        self.x0 = Largeur/2 -10
+        self.y0 = Hauteur - 5
+        self.x1 = Largeur/2 + 10
+        self.y1 = Hauteur - 25
+        self.id_tk = jeu.create_rectangle(self.x0, self.y0, self.x1, self.y1, width=5, outline='dark cyan', fill='cyan')
+    def deplacement(self, sens, jeu):
+        self.x0 += sens * 20
+        self.x1 += sens * 20
+        if self.x0 < 0:
+            self.x1 = Largeur
+            self.x0 = Largeur - 20
+        elif self.x1 > Largeur:
+            self.x0 = 0
+            self.x1 = 20
+        jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
+    def tir(self, tirs_vaisseau, jeu):
+        tirs_vaisseau += [tir_vaisseau(self, 20, jeu)]
+
+class tir_vaisseau:
+    def __init__(self, vaisseau, longueur, jeu):
+        self.x = vaisseau.x0 + 10
+        self.y0 = vaisseau.y0 - longueur
+        self.y1 = vaisseau.y0
+        self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
+        self.deplacement(jeu)
+    def deplacement(self, jeu):
+        self.y0 -= 10
+        self.y1 -= 10
+        jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
+        jeu.after(20, self.deplacement, jeu)
 
 
-
+def Clavier(event):
+    touche = event.keysym
+    if touche =='Right':
+        vaisseau1.deplacement(1, jeu)
+    if touche =='Left':
+        vaisseau1.deplacement(-1, jeu)
+    if touche =='space':
+        vaisseau1.tir(tirs_vaisseau, jeu)
+        print(tirs_vaisseau[0].pos)
 #Programme principal
 
-tirs_alien = []
 
 fenetre = Tk()
 fenetre.title("Space invaders")
@@ -67,10 +109,11 @@ bouton_recommencer = Button(fenetre, text="New game", activebackground="cyan", b
 bouton_recommencer.grid(row=1, column=1)
 bouton_quitter = Button(fenetre, text="Quit Game", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
-
+vaisseau1 = vaisseau(jeu)
 alien1 = alien(10, 10, 40, 40, 15, 1, jeu)
 delai = randint(2000, 5000)
 fenetre.after(delai, alien1.tir, tirs_alien, jeu)
-
+jeu.focus_set()
+jeu.bind('<Key>', Clavier)
 fenetre.mainloop()
 
