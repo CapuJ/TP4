@@ -10,6 +10,7 @@ from tkinter import Button, Label, PhotoImage, Tk, Canvas, messagebox
 
 # Initialisation
 
+
 tir_alien = None
 x0_alien = 0
 y0_alien = 10
@@ -53,7 +54,7 @@ def deplacement_alien():
         fenetre.after(20, deplacement_alien)
 
 def creer_tir_alien():
-    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, tir_alien
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon
     longueur_tir_alien = 20
     x_tir = x0_alien + rayon
     y0_tir = y1_alien
@@ -61,8 +62,8 @@ def creer_tir_alien():
     #tir_alien = jeu.create_line(x_tir, y0_tir, x_tir, y1_tir, fill='yellow')
     deplacement_tir_alien()
     
-def deplacement_tir_alien():
-    global x0_alien, y0_alien, x1_alien, y1_alien, rayon, tir_alien
+def deplacement_tir_alien(tir):
+    global x0_alien, y0_alien, x1_alien, y1_alien, rayon
     x0_tir, y0_tir, x1_tir, y1_tir = jeu.coords(tir_alien)
     y0_tir += 10
     y1_tir += 10
