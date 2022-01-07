@@ -63,13 +63,13 @@ def deplacement_tir_alien(tir):
     x0_tir, y0_tir, x1_tir, y1_tir = jeu.coords(tir_alien)
     y0_tir += 10
     y1_tir += 10
-    jeu.coords(tir, x0_tir, y0_tir, x1_tir, y1_tir)
+    jeu.coords(tir_alien, x0_tir, y0_tir, x1_tir, y1_tir)
+    if x1_tir==x1_alien or y1_tir==y1_alien:
+        jeu.delete(alien)
+        messagebox.showinfo('', 'Vous avez perdu !')
 
 
-
-    
-    
-
+ 
 #Programme principal
 
 
@@ -105,7 +105,6 @@ def Clavier(event):
     
 
 
-
 fenetre = Tk()
 fenetre.title("Space invaders")
 score = Label(fenetre, text='Score:')
@@ -136,4 +135,3 @@ tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
 
 
 fenetre.mainloop() 
-
