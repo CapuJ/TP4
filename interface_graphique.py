@@ -92,7 +92,7 @@ def deplacement_tir():
 
 
 def Clavier(event):
-    global PosX, PosY, xtir #,ytir
+    global PosX, PosY, xtir ,ytir
     touche = event.keysym
     if touche =='Right':
         PosX += 20
@@ -108,8 +108,8 @@ def Clavier(event):
             xtir=Largeur-10
     if touche =='space':
         deplacement_tir()
-        #if ytir<200:
-           # jeu.delete(tir)
+        if ytir<0:
+           jeu.delete(tir)
         
     jeu.coords(vaisseau, PosX -10, PosY -10, PosX+10, PosY +10,)
     
