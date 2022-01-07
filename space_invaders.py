@@ -6,7 +6,8 @@ Interface du jeu Space Invaders
 """
 
 #Importation des modules nécessaires
-from tkinter import Button, Label, Tk, Canvas, messagebox
+from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
+import os
 from random import randint
 from time import sleep
 import structure_file as fl
@@ -101,13 +102,18 @@ def Clavier(event):
 
 fenetre = Tk()
 fenetre.title("Space invaders")
+chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+photo=PhotoImage(file=chemin)
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
-jeu = Canvas(fenetre, bg= 'dark blue', width=Largeur, height=Hauteur)
+vies = Label(fenetre, text='Vies:  /3')
+vies.grid(row=0, column=1, sticky='w')
+jeu = Canvas(fenetre, bg= 'dark blue' , width=Largeur, height=Hauteur)
+item= jeu.create_image(0,0, image=photo)
 jeu.grid(row=1, column= 0, rowspan=2)
-bouton_recommencer = Button(fenetre, text="New game", activebackground="cyan", background="green")
+bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green")
 bouton_recommencer.grid(row=1, column=1)
-bouton_quitter = Button(fenetre, text="Quit Game", activebackground="cyan", background="red", command=fenetre.destroy)
+bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
 vaisseau1 = vaisseau(jeu)
 alien1 = alien(10, 10, 40, 40, 15, 1, jeu)
