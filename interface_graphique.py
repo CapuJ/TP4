@@ -118,8 +118,8 @@ def Clavier(event):
 fenetre = Tk()
 fenetre.title("Space invaders")
 
-#chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
-#photo=PhotoImage(file=chemin)
+chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+photo=PhotoImage(file=chemin)
 
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
