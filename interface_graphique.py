@@ -6,7 +6,9 @@ Interface du jeu Space Invaders
 """
 
 #Importation des modules nécessaires
-from tkinter import Button, Label, PhotoImage, Tk, Canvas, messagebox
+from tkinter import Button, Image, Label, PhotoImage, Tk, Canvas, messagebox, ANCHOR
+from tkinter.constants import NW
+import os
 
 # Initialisation
 
@@ -115,15 +117,22 @@ def Clavier(event):
 
 fenetre = Tk()
 fenetre.title("Space invaders")
-background_image=PhotoImage("fond.png")
-background_label =Label(image=background_image)
-background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+photo=PhotoImage(file=chemin)
 
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
 vies = Label(fenetre, text='Vies:  /3')
 vies.grid(row=0, column=1, sticky='w')
-jeu = Canvas(fenetre, bg= 'dark blue', width=Largeur, height=Hauteur)
+jeu = Canvas(fenetre, bg= 'dark blue' , width=Largeur, height=Hauteur)
+
+item= jeu.create_image(0,0, image=photo)
+
+#background_image=PhotoImage("fond.png")
+#background_label =Label(image=background_image)
+#background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 jeu.grid(row=1, column= 0, rowspan=2)
 bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green")
 bouton_recommencer.grid(row=1, column=1)
@@ -135,19 +144,12 @@ deplacement_alien()
 
 fenetre.after(1000, creer_tir_alien)
 
-tir=jeu.create_rectangle(PosX, PosY-10, xtir+10, ytir+100, width=2, outline='black', fill='cyan')
+tir=jeu.create_rectangle(PosX, PosY-10, xtir+10, ytir+100, width=2, outline='red', fill='cyan')
 vaisseau=jeu.create_rectangle(PosX-10,PosY-10, PosX+10, PosY+10,width=5, outline='dark cyan', fill='cyan')
 
 
 
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
-
-
-#tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
-
-
-#tir=jeu.create_line(PosX, PosY-10, xtir+10, ytir+10, fill="yellow")
-
 
 fenetre.mainloop() 
