@@ -11,6 +11,7 @@ import os
 from random import randint
 from time import sleep
 import structure_file as fl
+
 # Initialisation
 
 Largeur=480
@@ -53,7 +54,12 @@ class tir_alien:
         self.y0 += 10
         self.y1 += 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        jeu.after(20, self.deplacement, jeu)
+        if (vaisseau1.y1 + 10 < self.y0 < vaisseau1.y1 - 10) and ((vaisseau1.x0 + 10 < self.x < vaisseau1.x0 - 10 ) or (vaisseau1.x1 + 10 < self.x < vaisseau1.x1 - 10)):
+            jeu.delete(vaisseau1.id_tk)
+            jeu.delete(self.id_tk)
+            messagebox.showinfo('Youpi!', 'echec!')
+        else:
+            jeu.after(20, self.deplacement, jeu)
 
 class vaisseau:
     def __init__(self,jeu):
@@ -86,7 +92,12 @@ class tir_vaisseau:
         self.y0 -= 10
         self.y1 -= 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        jeu.after(20, self.deplacement, jeu)
+        if (alien1.y1 - 10 < self.y0 < alien1.y1 + 10) and ((alien1.x0 - 10 < self.x < alien1.x0 + 10 ) or (alien1.x1- 10 < self.x < alien1.x1 + 10)):
+            jeu.delete(alien1.id_tk)
+            jeu.delete(self.id_tk)
+            messagebox.showinfo('Youpi!', 'Félicitations! Vous avez gagné!')
+        else:
+            jeu.after(20, self.deplacement, jeu)
 
 
 def Clavier(event):
@@ -97,7 +108,8 @@ def Clavier(event):
         vaisseau1.deplacement(-1, jeu)
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu)
-        print(tirs_vaisseau[0].pos)
+        
+
 #Programme principal
 
 
@@ -113,7 +125,7 @@ vies.grid(row=0, column=1, sticky='w')
 jeu = Canvas(fenetre, bg= 'dark blue' , width=Largeur, height=Hauteur)
 item= jeu.create_image(0,0, image=photo)
 jeu.grid(row=1, column= 0, rowspan=2)
-bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green")
+bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green") 
 bouton_recommencer.grid(row=1, column=1)
 bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
