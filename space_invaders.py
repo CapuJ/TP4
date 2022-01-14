@@ -18,6 +18,7 @@ Largeur=480
 Hauteur=320
 tirs_alien = []
 tirs_vaisseau = []
+
 class alien:
     def __init__(self, x0, y0, x1, y1, rayon, sens, jeu):
         self.x0 = x0
@@ -107,6 +108,7 @@ def Clavier(event):
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu)
 #Programme principal
+
 
 
 fenetre = Tk()
