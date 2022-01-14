@@ -5,30 +5,36 @@ Capucine Jumelle, Thomas Gabriel
 Interface du jeu Space Invaders
 """
 
-#Importation des modules nécessaires
+## Importation des modules nécessaires ##
+
+import tkinter
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
 import os
 from random import randint
 from time import sleep
 import structure_file as fl
 
-# Initialisation
+## Initialisation ##
 
-Largeur=480
-Hauteur=320
+Largeur=960
+Hauteur=640
 tirs_alien = []
 tirs_vaisseau = []
 
-class alien:
+
+class alien: 
+#Cette classe met en place toute les doneés liées a l'alien
     def __init__(self, x0, y0, x1, y1, rayon, sens, jeu):
+    #initialisation de l'alien
         self.x0 = x0
         self.y0 = y0
         self.x1 = x1
         self.y1 = y1
         self.rayon = rayon
         self.sens = sens
-        self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
-        self.deplacement(jeu, 5, 15)
+        self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green') #creation de la forme de l'alien
+        self.deplacement(jeu, 2, 15)
+
     def deplacement(self, jeu, pas_x, pas_y):
         if (self.x0 + self.sens * pas_x) < 0 or (self.x1 + self.sens * pas_x) > Largeur:
             self.sens *= -1
@@ -100,6 +106,7 @@ class tir_vaisseau:
         if (alien1.y1 - 10 < self.y0 < alien1.y1 + 10) and ((alien1.x0 - 10 < self.x < alien1.x0 + 10 ) or (alien1.x1- 10 < self.x < alien1.x1 + 10)):
             jeu.delete(alien1.id_tk)
             jeu.delete(self.id_tk)
+            tirs_vaisseau.remove(self)
             messagebox.showinfo('Youpi!', 'Félicitations! Vous avez gagné!')
         elif self.y0 < 0:
             jeu.delete(self.id_tk)
@@ -118,29 +125,46 @@ def Clavier(event):
         vaisseau1.tir(tirs_vaisseau, jeu)
         
 
-#Programme principal
+## Programme principal ##
 
-
-
+#création de la fenêtre
 fenetre = Tk()
 fenetre.title("Space invaders")
+
+#recherche de la photo de fond
 chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
 photo=PhotoImage(file=chemin)
+
+#affichage du score
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
+
+#affichage du nombre de vies
 vies = Label(fenetre, text='Vies:  /3')
 vies.grid(row=0, column=1, sticky='w')
-jeu = Canvas(fenetre, bg= 'dark blue' , width=Largeur, height=Hauteur)
-item= jeu.create_image(0,0, image=photo)
+
+#couleur de fond 
+jeu = Canvas(fenetre, bg= 'dark blue', width=Largeur, height=Hauteur)
+
+#création de l'image de fond sur le canvas
+item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
+
+#création de la grille
 jeu.grid(row=1, column= 0, rowspan=2)
+
+#création du boutton "Nouveau Jeu"
 bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green") 
 bouton_recommencer.grid(row=1, column=1)
+
+#création du boutton "Quitter le Jeu"
 bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
+
 vaisseau1 = vaisseau(jeu)
 alien1 = alien(10, 10, 40, 40, 15, 1, jeu)
 delai = randint(2000, 5000)
 fenetre.after(delai, alien1.tir, tirs_alien, jeu)
+
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
 fenetre.mainloop()
