@@ -80,31 +80,37 @@ class vaisseau:
             self.x0 = 0
             self.x1 = 20
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
-    def tir(self, tirs_vaisseau, jeu):
-        tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau)]
+    def tir(self, tirs_vaisseau, jeu, groupe):
+        tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau, groupe)]
 
 class tir_vaisseau:
-    def __init__(self, vaisseau, longueur, jeu, tirs_vaisseaux):
+    def __init__(self, vaisseau, longueur, jeu, tirs_vaisseau, groupe):
         self.x = vaisseau.x0 + 10
         self.y0 = vaisseau.y0 - longueur
         self.y1 = vaisseau.y0
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
-        self.deplacement(jeu, tirs_vaisseau)
-    def deplacement(self, jeu, tirs_vaisseau, alien):
+        self.deplacement(jeu, tirs_vaisseau, groupe)
+    def deplacement(self, jeu, tirs_vaisseau, groupe):
         self.y0 -= 10
         self.y1 -= 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        if (alien.y1 - 10 < self.y0 < alien.y1 + 10) and ((alien.x0 - 10 < self.x < alien.x0 + 10 ) or (alien.x1- 10 < self.x < alien.x1 + 10)):
-            jeu.delete(alien.id_tk)
+        collision = self.collision(groupe, tirs_vaisseau, jeu)
+        if self.y0 < 0:
             jeu.delete(self.id_tk)
             tirs_vaisseau.remove(self)
-            messagebox.showinfo('Youpi!', 'Félicitations! Vous avez gagné!')
-        elif self.y0 < 0:
-            jeu.delete(self.id_tk)
-            tirs_vaisseau.remove(self)
-        else:
-            jeu.after(20, self.deplacement, jeu, tirs_vaisseau)
-
+        elif not collision:
+            jeu.after(20, self.deplacement, jeu, tirs_vaisseau, groupe)
+    def collision(self, groupe, tirs_vaisseau, jeu):
+        for alien in groupe.aliens:
+            meme_ligne = alien.y0 < self.y0 < alien.y1
+            meme_colonne = alien.x0 < self.x < alien.x1
+            if meme_colonne and meme_ligne:
+                jeu.delete(self.id_tk)
+                tirs_vaisseau.remove(self)
+                jeu.delete(alien.id_tk)
+                groupe.aliens.remove(alien)
+                return True
+        return False
 class groupe_aliens:
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
         self.aliens = []
@@ -121,6 +127,7 @@ class groupe_aliens:
                 x0 += 2 * rayon_alien + 4
         jeu.after(20, self.deplacement, 2, 15, jeu)
         delai = randint(2000, 5000)
+        jeu.after(delai, self.tir, tirs_alien, jeu)
     def deplacement(self, pas_x, pas_y, jeu):
         debordement_g = (self.xmin + self.sens * pas_x < 0)
         debordement_d = (self.xmax + self.sens * pas_x > largeur)
@@ -144,6 +151,16 @@ class groupe_aliens:
                 if alien.x1 > self.xmax:
                     self.xmax = alien.x1
         jeu.after(20, self.deplacement, pas_x, pas_y, jeu)
+    def tir(self, tirs_alien, jeu):
+        n = len(self.aliens)
+        ind_tireur = randint(0, n - 1)
+        print(ind_tireur)
+        tireur = self.aliens[ind_tireur]
+        tireur.tir(tirs_alien, jeu)
+        delai = randint(2000, 5000)
+        jeu.after(delai, self.tir, tirs_alien, jeu)
+
+
     
             
 
@@ -156,7 +173,7 @@ def Clavier(event):
     if touche =='Left':
         vaisseau1.deplacement(-1, jeu)
     if touche =='space':
-        vaisseau1.tir(tirs_vaisseau, jeu)
+        vaisseau1.tir(tirs_vaisseau, jeu, groupe)
         
 
 ## Programme principal ##
