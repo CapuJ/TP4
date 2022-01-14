@@ -177,8 +177,8 @@ fenetre.title("Space invaders")
 
 
 #recherche de la photo de fond
-#chemin = os.path.join(os.path.dirname(__file__), "f2.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
-#photo=PhotoImage(file=chemin)
+chemin = os.path.join(os.path.dirname(__file__), "f2.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+photo=PhotoImage(file=chemin)
 
 #affichage du score
 score = Label(fenetre, text='Score:')
@@ -192,9 +192,7 @@ vies.grid(row=0, column=1, sticky='w')
 jeu = Canvas(fenetre, bg= 'dark blue', width=largeur, height=hauteur)
 
 #création de l'image de fond sur le canvas
-#item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
-
-
+item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
 
 #création de la grille
 jeu.grid(row=1, column= 0, rowspan=2)
