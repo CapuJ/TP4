@@ -166,7 +166,7 @@ fenetre = Tk()
 fenetre.title("Space invaders")
 
 #recherche de la photo de fond
-chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+chemin = os.path.join(os.path.dirname(__file__), "f2.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
 photo=PhotoImage(file=chemin)
 
 #affichage du score
