@@ -11,6 +11,7 @@ import os
 from random import randint
 from time import sleep
 import structure_file as fl
+
 # Initialisation
 
 Largeur=480
@@ -26,7 +27,7 @@ class alien:
         self.rayon = rayon
         self.sens = sens
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
-        self.deplacement(jeu, 2, 15)
+        self.deplacement(jeu, 5, 15)
     def deplacement(self, jeu, pas_x, pas_y):
         if (self.x0 + self.sens * pas_x) < 0 or (self.x1 + self.sens * pas_x) > Largeur:
             self.sens *= -1
@@ -35,12 +36,17 @@ class alien:
         self.x0 = self.x0 + self.sens * pas_x
         self.x1 = self.x1 + self.sens * pas_x 
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
-        jeu.after(20, self.deplacement, jeu, pas_x, pas_y)
+        if vaisseau1.y1 < self.y1 < vaisseau1.y0 and ((vaisseau1.x0 <self.x0 < vaisseau1.x1) or (vaisseau1.x0 < self.x1 < vaisseau1.x1)):
+            print(vaisseau1.y0 < self.y1 < vaisseau1.y1)
+            jeu.delete(self.id_tk)
+            messagebox.showinfo('', 'Vous avez perdu !')
+        else:
+            jeu.after(20, self.deplacement, jeu, pas_x, pas_y)
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu)]
         delai = randint(2000, 5000)
         jeu.after(delai, self.tir, tirs_alien, jeu)
-        
+
 class tir_alien:
     def __init__(self, alien, longueur, jeu):
         self.x = alien.x0 + alien.rayon
@@ -72,20 +78,24 @@ class vaisseau:
             self.x1 = 20
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
     def tir(self, tirs_vaisseau, jeu):
-        tirs_vaisseau += [tir_vaisseau(self, 20, jeu)]
+        tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau)]
 
 class tir_vaisseau:
-    def __init__(self, vaisseau, longueur, jeu):
+    def __init__(self, vaisseau, longueur, jeu, tirs_vaisseaux):
         self.x = vaisseau.x0 + 10
         self.y0 = vaisseau.y0 - longueur
         self.y1 = vaisseau.y0
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
-        self.deplacement(jeu)
-    def deplacement(self, jeu):
+        self.deplacement(jeu, tirs_vaisseau)
+    def deplacement(self, jeu, tirs_vaisseau):
         self.y0 -= 10
         self.y1 -= 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        jeu.after(20, self.deplacement, jeu)
+        if self.y0 < 0:
+            jeu.delete(self.id_tk)
+            tirs_vaisseau.remove(self)
+        else: 
+            jeu.after(20, self.deplacement, jeu, tirs_vaisseau)
 
 
 def Clavier(event):
@@ -96,7 +106,6 @@ def Clavier(event):
         vaisseau1.deplacement(-1, jeu)
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu)
-        print(tirs_vaisseau[0].pos)
 #Programme principal
 
 
