@@ -5,22 +5,27 @@ Capucine Jumelle, Thomas Gabriel
 Interface du jeu Space Invaders
 """
 
-#Importation des modules nécessaires
+## Importation des modules nécessaires ##
+
+import tkinter
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
 import os
 from random import randint
 from time import sleep
 import structure_file as fl
 
-# Initialisation
+## Initialisation ##
 
-largeur=480
-hauteur=320
+largeur=960
+hauteur=640
 tirs_alien = []
 tirs_vaisseau = []
 
-class alien:
+
+class alien: 
+#Cette classe met en place toute les doneés liées a l'alien
     def __init__(self, x0, y0, x1, y1, rayon, jeu):
+    #initialisation de l'alien
         self.x0 = x0
         self.y0 = y0
         self.x1 = x1
@@ -54,7 +59,12 @@ class tir_alien:
         self.y0 += 10
         self.y1 += 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        jeu.after(20, self.deplacement, jeu)
+        if (vaisseau1.y1 + 10 < self.y0 < vaisseau1.y1 - 10) and ((vaisseau1.x0 + 10 < self.x < vaisseau1.x0 - 10 ) or (vaisseau1.x1 + 10 < self.x < vaisseau1.x1 - 10)):
+            jeu.delete(vaisseau1.id_tk)
+            jeu.delete(self.id_tk)
+            messagebox.showinfo('Youpi!', 'echec!')
+        else:
+            jeu.after(20, self.deplacement, jeu)
 
 class vaisseau:
     def __init__(self,jeu):
@@ -83,14 +93,19 @@ class tir_vaisseau:
         self.y1 = vaisseau.y0
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
         self.deplacement(jeu, tirs_vaisseau)
-    def deplacement(self, jeu, tirs_vaisseau):
+    def deplacement(self, jeu, tirs_vaisseau, alien):
         self.y0 -= 10
         self.y1 -= 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        if self.y0 < 0:
+        if (alien.y1 - 10 < self.y0 < alien.y1 + 10) and ((alien.x0 - 10 < self.x < alien.x0 + 10 ) or (alien.x1- 10 < self.x < alien.x1 + 10)):
+            jeu.delete(alien.id_tk)
             jeu.delete(self.id_tk)
             tirs_vaisseau.remove(self)
-        else: 
+            messagebox.showinfo('Youpi!', 'Félicitations! Vous avez gagné!')
+        elif self.y0 < 0:
+            jeu.delete(self.id_tk)
+            tirs_vaisseau.remove(self)
+        else:
             jeu.after(20, self.deplacement, jeu, tirs_vaisseau)
 
 class groupe_aliens:
@@ -144,25 +159,43 @@ def Clavier(event):
         vaisseau1.deplacement(-1, jeu)
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu)
+        
 
+## Programme principal ##
 
-#Programme principal
-
+#création de la fenêtre
 fenetre = Tk()
 fenetre.title("Space invaders")
+
+#recherche de la photo de fond
 chemin = os.path.join(os.path.dirname(__file__), "f1.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
 photo=PhotoImage(file=chemin)
+
+#affichage du score
 score = Label(fenetre, text='Score:')
 score.grid(row=0, column=0, sticky='w')
+
+#affichage du nombre de vies
 vies = Label(fenetre, text='Vies:  /3')
 vies.grid(row=0, column=1, sticky='w')
-jeu = Canvas(fenetre, bg= 'dark blue' , width=largeur, height=hauteur)
-item= jeu.create_image(0,0, image=photo)
+
+#couleur de fond 
+jeu = Canvas(fenetre, bg= 'dark blue', width=largeur, height=hauteur)
+
+#création de l'image de fond sur le canvas
+item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
+
+#création de la grille
 jeu.grid(row=1, column= 0, rowspan=2)
-bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green")
+
+#création du boutton "Nouveau Jeu"
+bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green") 
 bouton_recommencer.grid(row=1, column=1)
+
+#création du boutton "Quitter le Jeu"
 bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
+
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 20)

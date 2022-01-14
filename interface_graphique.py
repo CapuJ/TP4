@@ -25,8 +25,8 @@ pas_y = 15
 tirs_alien  =[]
 
 
-Largeur=480
-Hauteur=320
+Largeur=960 
+Hauteur=640 
 
 vie=1
 # Fonctions
