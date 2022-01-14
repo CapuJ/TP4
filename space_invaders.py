@@ -32,7 +32,6 @@ class alien:
         self.y1 = y1
         self.rayon = rayon
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
-        #self.deplacement(jeu, 5, 15)
     def deplacement(self, jeu, pas_x, pas_y, debordement, sens):
         if debordement:
             self.y0 = self.y0 + pas_y
@@ -43,8 +42,6 @@ class alien:
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu)]
-        delai = randint(2000, 5000)
-        jeu.after(delai, self.tir, tirs_alien, jeu)
     def collision(self, vaisseau):
         return vaisseau1.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
 
@@ -111,25 +108,26 @@ class tir_vaisseau:
 class groupe_aliens:
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
         self.aliens = []
-        self.xmin = (largeur/2) - ((nb_lignes/2) * (2 *rayon_alien))
-        self.xmax = (largeur/2) - ((nb_lignes/2) * (2 * rayon_alien)) + 2 * rayon_alien
+        self.xmin = (largeur/2) - ((nb_lignes/2) * (2 *rayon_alien)) - ((nb_lignes - 1) * 4)
+        self.xmax = (largeur/2) - ((nb_lignes/2) * (2 * rayon_alien)) + 2 * rayon_alien 
         self.sens = 1
         x0 = self.xmin
         y0 = 10 - 2 * rayon_alien
         for j in range(nb_colonnes):
             x0 = self.xmin
-            y0 += 2 * rayon_alien
+            y0 += 2 * rayon_alien + 4
             for i in range(nb_lignes):
                 self.aliens += [alien(x0, y0, x0 + (2 * rayon_alien), y0 + (2 * rayon_alien), rayon_alien, jeu)]
-                x0 += 2 * rayon_alien
+                x0 += 2 * rayon_alien + 4
         jeu.after(20, self.deplacement, 2, 15, jeu)
+        delai = randint(2000, 5000)
     def deplacement(self, pas_x, pas_y, jeu):
-        print(self.sens)
         debordement_g = (self.xmin + self.sens * pas_x < 0)
         debordement_d = (self.xmax + self.sens * pas_x > largeur)
-        print(self.xmin, self.xmax)
         if (debordement_g or debordement_d):
             self.sens *= -1
+            self.xmax = 0
+            self.xmin = largeur
             for alien in self.aliens:
                 alien.deplacement(jeu, pas_x, pas_y, True, self.sens)
                 if alien.x0 < self.xmin:
@@ -198,7 +196,7 @@ bouton_quitter.grid(row=2, column=1)
 
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
-groupe = groupe_aliens(jeu, 9, 4, 20)
+groupe = groupe_aliens(jeu, 9, 4, 25)
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
