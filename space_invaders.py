@@ -32,6 +32,7 @@ class alien:
         self.y1 = y1
         self.rayon = rayon
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
+
     def deplacement(self, jeu, pas_x, pas_y, debordement, sens):
         if debordement:
             self.y0 = self.y0 + pas_y
@@ -44,6 +45,7 @@ class alien:
         tirs_alien += [tir_alien(self, 15, jeu)]
     def collision(self, vaisseau):
         return vaisseau1.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
+
 
 class tir_alien:
     def __init__(self, alien, longueur, jeu):
@@ -70,6 +72,7 @@ class vaisseau:
         self.x1 = largeur/2 + 10
         self.y1 = hauteur - 25
         self.id_tk = jeu.create_rectangle(self.x0, self.y0, self.x1, self.y1, width=5, outline='dark cyan', fill='cyan')
+
     def deplacement(self, sens, jeu):
         self.x0 += sens * 20
         self.x1 += sens * 20
@@ -159,15 +162,25 @@ def Clavier(event):
         vaisseau1.tir(tirs_vaisseau, jeu)
         
 
+###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
+    ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
+    ###self.photo1=PhotoImage(file=self.chemin1)
+    ###self.id_tk= jeu.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
+
+
+
 ## Programme principal ##
 
 #création de la fenêtre
 fenetre = Tk()
 fenetre.title("Space invaders")
 
+
+
+
 #recherche de la photo de fond
-chemin = os.path.join(os.path.dirname(__file__), "f2.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
-photo=PhotoImage(file=chemin)
+#chemin = os.path.join(os.path.dirname(__file__), "f2.gif") #permet de trouver a l'instant t l'emplacement du fichier python et de lui associer l'image 
+#photo=PhotoImage(file=chemin)
 
 #affichage du score
 score = Label(fenetre, text='Score:')
@@ -181,7 +194,9 @@ vies.grid(row=0, column=1, sticky='w')
 jeu = Canvas(fenetre, bg= 'dark blue', width=largeur, height=hauteur)
 
 #création de l'image de fond sur le canvas
-item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
+#item= jeu.create_image(0,0, image=photo, anchor = tkinter.NW)
+
+
 
 #création de la grille
 jeu.grid(row=1, column= 0, rowspan=2)
@@ -197,6 +212,9 @@ bouton_quitter.grid(row=2, column=1)
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 25)
+
+
+
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
