@@ -32,7 +32,6 @@ class alien:
         self.y1 = y1
         self.rayon = rayon
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
-
     def deplacement(self, jeu, pas_x, pas_y, debordement, sens):
         if debordement:
             self.y0 = self.y0 + pas_y
@@ -72,7 +71,6 @@ class vaisseau:
         self.x1 = largeur/2 + 10
         self.y1 = hauteur - 25
         self.id_tk = jeu.create_rectangle(self.x0, self.y0, self.x1, self.y1, width=5, outline='dark cyan', fill='cyan')
-
     def deplacement(self, sens, jeu):
         self.x0 += sens * 20
         self.x1 += sens * 20
