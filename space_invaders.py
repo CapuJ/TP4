@@ -59,7 +59,7 @@ class tir_alien:
         if (vaisseau1.y1 + 10 < self.y0 < vaisseau1.y1 - 10) and ((vaisseau1.x0 + 10 < self.x < vaisseau1.x0 - 10 ) or (vaisseau1.x1 + 10 < self.x < vaisseau1.x1 - 10)):
             jeu.delete(vaisseau1.id_tk)
             jeu.delete(self.id_tk)
-            messagebox.showinfo('Youpi!', 'echec!')
+            messagebox.showinfo('Oupsi!', 'echec!')
         else:
             jeu.after(20, self.deplacement, jeu)
 
@@ -111,6 +111,7 @@ class tir_vaisseau:
                 groupe.aliens.remove(alien)
                 return True
         return False
+        
 class groupe_aliens:
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
         self.aliens = []
