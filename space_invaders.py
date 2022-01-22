@@ -199,15 +199,21 @@ class groupe_aliens:
 
 
 
-def Clavier(event):
+def deplacer(event):
     touche = event.keysym
     if touche =='Right':
         vaisseau1.deplacement(1, jeu)
     if touche =='Left':
         vaisseau1.deplacement(-1, jeu)
+
+def tirer(event):
+    touche = event.keysym
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu, groupe)
-        
+
+
+
+
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
     ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
@@ -259,6 +265,7 @@ groupe = groupe_aliens(jeu, 9, 4, 25)
 
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
-jeu.bind('<Key>', Clavier)
+jeu.bind('<Key>', deplacer)
+jeu.bind("<KeyRelease>", tirer)
 fenetre.mainloop()
 
