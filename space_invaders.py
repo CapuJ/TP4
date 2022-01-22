@@ -14,8 +14,6 @@ import tkinter
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
 import os
 from random import randint
-import time
-from time import sleep
 
 ## Initialisation ##
 
@@ -23,6 +21,8 @@ largeur=960
 hauteur=640
 tirs_alien = []
 tirs_vaisseau = []
+
+
 
 
 class alien: 
@@ -35,6 +35,7 @@ class alien:
         self.y1 = y1
         self.rayon = rayon
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
+
     def deplacement(self, jeu, pas_x, pas_y, debordement, sens):
         if debordement:
             self.y0 = self.y0 + pas_y
@@ -43,19 +44,25 @@ class alien:
             self.x0 = self.x0 + pas_x * sens
             self.x1 = self.x1 + pas_x * sens
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
+    
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu)]
+
     def collision(self, vaisseau):
         return vaisseau1.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
 
 
+
+
 class tir_alien:
+
     def __init__(self, alien, longueur, jeu):
         self.x = alien.x0 + alien.rayon
         self.y0 = alien.y1
         self.y1 = alien.y1 + longueur
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="yellow")
         self.deplacement(jeu)
+
     def deplacement(self, jeu):
         self.y0 += 10
         self.y1 += 10
@@ -67,13 +74,19 @@ class tir_alien:
         else:
             jeu.after(20, self.deplacement, jeu)
 
+
+
+
+
 class vaisseau:
+
     def __init__(self,jeu):
         self.x0 = largeur/2 -10
         self.y0 = hauteur - 5
         self.x1 = largeur/2 + 10
         self.y1 = hauteur - 25
         self.id_tk = jeu.create_rectangle(self.x0, self.y0, self.x1, self.y1, width=5, outline='dark cyan', fill='cyan')
+
     def deplacement(self, sens, jeu):
         self.x0 += sens * 20
         self.x1 += sens * 20
@@ -84,16 +97,23 @@ class vaisseau:
             self.x0 = 0
             self.x1 = 20
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
+
     def tir(self, tirs_vaisseau, jeu, groupe):
         tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau, groupe)]
 
+
+
+
+
 class tir_vaisseau:
+
     def __init__(self, vaisseau, longueur, jeu, tirs_vaisseau, groupe):
         self.x = vaisseau.x0 + 10
         self.y0 = vaisseau.y0 - longueur
         self.y1 = vaisseau.y0
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
         self.deplacement(jeu, tirs_vaisseau, groupe)
+
     def deplacement(self, jeu, tirs_vaisseau, groupe):
         self.y0 -= 10
         self.y1 -= 10
@@ -104,6 +124,7 @@ class tir_vaisseau:
             tirs_vaisseau.remove(self)
         elif not collision:
             jeu.after(20, self.deplacement, jeu, tirs_vaisseau, groupe)
+
     def collision(self, groupe, tirs_vaisseau, jeu):
         for alien in groupe.aliens:
             meme_ligne = alien.y0 < self.y0 < alien.y1
@@ -115,8 +136,12 @@ class tir_vaisseau:
                 groupe.aliens.remove(alien)
                 return True
         return False
-        
+
+
+
+
 class groupe_aliens:
+
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
         self.aliens = []
         self.xmin = (largeur/2) - ((nb_lignes/2) * (2 *rayon_alien)) - ((nb_lignes - 1) * 4)
@@ -133,6 +158,7 @@ class groupe_aliens:
         jeu.after(20, self.deplacement, 2, 15, jeu)
         delai = randint(2000, 5000)
         jeu.after(delai, self.tir, tirs_alien, jeu)
+
     def deplacement(self, pas_x, pas_y, jeu):
         debordement_g = (self.xmin + self.sens * pas_x < 0)
         debordement_d = (self.xmax + self.sens * pas_x > largeur)
@@ -156,6 +182,7 @@ class groupe_aliens:
                 if alien.x1 > self.xmax:
                     self.xmax = alien.x1
         jeu.after(20, self.deplacement, pas_x, pas_y, jeu)
+
     def tir(self, tirs_alien, jeu):
         n = len(self.aliens)
         ind_tireur = randint(0, n - 1)
@@ -165,9 +192,9 @@ class groupe_aliens:
         delai = randint(2000, 5000)
         jeu.after(delai, self.tir, tirs_alien, jeu)
 
-
-    
-            
+   #### def victoire(self):
+       ### if self.aliens==[]:
+          ###  messagebox.showinfo("Youpi", "Vous avez détruit tous les aliens!")
 
 
 
@@ -194,8 +221,6 @@ def Clavier(event):
 #création de la fenêtre
 fenetre = Tk()
 fenetre.title("Space invaders")
-
-
 
 
 #recherche de la photo de fond
@@ -230,7 +255,6 @@ bouton_quitter.grid(row=2, column=1)
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 25)
-
 
 
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
