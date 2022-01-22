@@ -7,10 +7,14 @@ Interface du jeu Space Invaders
 
 ## Importation des modules nécessaires ##
 
+from asyncio import wait_for
+from multiprocessing.connection import wait
+from socket import timeout
 import tkinter
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
 import os
 from random import randint
+import time
 from time import sleep
 
 ## Initialisation ##
@@ -164,6 +168,7 @@ class groupe_aliens:
 
     
             
+
 
 
 
