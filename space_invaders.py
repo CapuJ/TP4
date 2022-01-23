@@ -11,7 +11,7 @@ Interface du jeu Space Invaders
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar
 import os
 from random import randint
-
+from PIL import Image, ImageTk
 
 
 ## Initialisation ##
@@ -228,7 +228,7 @@ def tirer(event):
 
 def crea_Bloc(X,Y):
 #cretion d'un bloc
-    Bloc=jeu.create_image(X,Y,anchor='nw', image=bloc)
+    Bloc=jeu.create_image(X,Y,anchor='nw', image=photo_bloc)
     return Bloc
 Blocs=""
 
@@ -300,7 +300,9 @@ groupe = groupe_aliens(jeu, 9, 4, 25)
 
 
 #création des blocs sur le canvas
-bloc=PhotoImage(file='bloc.gif')
+chemin_bloc = os.path.join(os.path.dirname(__file__), "bloc.gif")
+image_bloc = Image.open(chemin_bloc)
+photo_bloc = ImageTk.PhotoImage(image_bloc)
 crea_Ilots()
 
 
