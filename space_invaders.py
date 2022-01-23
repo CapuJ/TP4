@@ -34,7 +34,7 @@ class space_invaders:
     def init_game(self):
         self.vaisseau1 = vaisseau(self.jeu, dimensions_vaisseau, photo_vaisseau)
         self.groupe = groupe_aliens(self.jeu, 9, 4, (taille_alien/2), photo_alien)
-        self.boss = super_alien(taille_alien, self.jeu, photo_super_alien)
+        self.boss = super_alien(taille_alien/2, self.jeu, photo_super_alien)
     def game_over(self):
         self.vaisseau1 = None
         self.groupe = None
@@ -110,13 +110,15 @@ class tir_alien:
 
 
 class super_alien:
-    def __init__(self, taille, jeu, photo):
-        self.x0 = largeur/2 - taille/2
-        self.y0 = -10 - taille
-        self.x1 = self.x0 + taille
-        self.y1 = self.y0 + taille
+    def __init__(self, rayon, jeu, photo):
+        self.x0 = largeur/2 - rayon
+        self.y0 = -10 - 3 * rayon
+        self.x1 = self.x0 + 2 * rayon
+        self.y1 = self.y0 + 2 * rayon
+        self.rayon = rayon
         self.id_tk = jeu.create_image(self.x0, self.y0, image=photo, anchor='nw')
-        jeu.after(10000, self.descente, jeu, 2)
+        jeu.after(20000, self.descente, jeu, 2)
+        jeu.after(22000, self.tir, partie.tirs_alien, jeu)
     def descente(self, jeu, pas):
         self.y0 += pas
         self.y1 += pas
@@ -134,6 +136,10 @@ class super_alien:
         self.x1 = self.x1 + pas * sens
         jeu.coords(self.id_tk, self.x0, self.y0)
         jeu.after(10, self.deplacement, jeu, pas, sens)
+    def tir(self, tirs_alien, jeu):
+        tirs_alien += [tir_alien(self, 15, jeu, partie.vaisseau1, vies)]
+        delai = randint(500, 1500)
+        jeu.after(delai, self.tir, partie.tirs_alien, jeu)
 
 class vaisseau:
     def __init__(self, jeu, dimensions, photo):
