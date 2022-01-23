@@ -279,9 +279,6 @@ class protection:
                 self.jeu.delete(self.element)
 
 
-
-
-
 def menu():
     fenetre.menuEdit = Menubutton(fenetre,text='Menu', width='20', borderwidth=2, background='darkorange', activebackground='cyan')
     fenetre.menuEdit.grid(row=0,column=0)
@@ -289,7 +286,7 @@ def menu():
     fenetre.file_menu = Menu(fenetre.menuEdit, tearoff=0)
     j = 1
     for i in choix:
-        S = fenetre.file_menu.add_radiobutton(label=i, variable=fenetre.user_choice, value=i)
+        menu_deroulant = fenetre.file_menu.add_radiobutton(label=i, variable=fenetre.user_choice, value=i)
         j += 1
     fenetre.menuEdit.config(menu=fenetre.file_menu)
 
