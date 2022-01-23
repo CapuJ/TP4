@@ -286,16 +286,9 @@ groupe = groupe_aliens(jeu, 9, 4, 25)
 
 
 
-#création des blocs
+#création des blocs sur le canvas
 bloc=PhotoImage(file='bloc.gif')
 crea_Ilots()
-
-
-
-
-
-
-
 
 
 
