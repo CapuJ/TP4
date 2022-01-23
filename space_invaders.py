@@ -12,6 +12,8 @@ from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar
 import os
 from random import randint
 
+
+
 ## Initialisation ##
 
 largeur=960
@@ -222,7 +224,29 @@ def tirer(event):
     touche = event.keysym
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1)
-        
+
+
+def crea_Bloc(X,Y):
+#cretion d'un bloc
+    Bloc=jeu.create_image(X,Y,anchor='nw', image=bloc)
+    return Bloc
+Blocs=""
+
+def crea_Ilots():
+ #Création des bloc d'ilots
+    Blocs=[]
+    XBloc=45
+    YBloc=500
+    for i in range (0,54):  #nombre de repetition des blocs
+        Blocs.append(crea_Bloc(XBloc,YBloc))
+        if XBloc==195 or XBloc==510:
+            XBloc+=135
+        if XBloc==825:
+            XBloc=45
+            YBloc+=30
+        else :
+            XBloc+=30
+
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
     ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
@@ -273,9 +297,16 @@ vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 25)
 
+
+
+#création des blocs sur le canvas
+bloc=PhotoImage(file='bloc.gif')
+crea_Ilots()
+
+
+
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
 jeu.bind('<Key>', deplacer)
 jeu.bind("<KeyRelease>", tirer)
 fenetre.mainloop()
-
