@@ -21,6 +21,8 @@ tirs_vaisseau = []
 score = 0
 
 
+
+
 class alien: 
 #Cette classe met en place toute les doneés liées a l'alien
     def __init__(self, x0, y0, x1, y1, rayon, jeu):
@@ -31,6 +33,7 @@ class alien:
         self.y1 = y1
         self.rayon = rayon
         self.id_tk = jeu.create_oval(x0, y0, x1, y1, fill = 'green')
+
     def deplacement(self, jeu, pas_x, pas_y, debordement, sens):
         if debordement:
             self.y0 = self.y0 + pas_y
@@ -39,10 +42,13 @@ class alien:
             self.x0 = self.x0 + pas_x * sens
             self.x1 = self.x1 + pas_x * sens
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
+    
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu, vaisseau1, vies)]
     def collision(self, vaisseau):
         return vaisseau.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
+
+
 
 
 class tir_alien:
@@ -77,7 +83,11 @@ class tir_alien:
 
 
 
+
+
+
 class vaisseau:
+
     def __init__(self,jeu):
         self.x0 = largeur/2 - 20
         self.y0 = hauteur - 5
@@ -133,6 +143,7 @@ class tir_vaisseau:
         return False
         
 class groupe_aliens:
+
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
         self.aliens = []
         self.xmin = (largeur/2) - ((nb_lignes/2) * (2 *rayon_alien)) - ((nb_lignes - 1) * 4)
@@ -149,6 +160,7 @@ class groupe_aliens:
         jeu.after(20, self.deplacement, 2, 15, jeu)
         delai = randint(2000, 5000)
         jeu.after(delai, self.tir, tirs_alien, jeu)
+
     def deplacement(self, pas_x, pas_y, jeu):
         debordement_g = (self.xmin + self.sens * pas_x < 0)
         debordement_d = (self.xmax + self.sens * pas_x > largeur)
@@ -172,6 +184,7 @@ class groupe_aliens:
                 if alien.x1 > self.xmax:
                     self.xmax = alien.x1
         jeu.after(20, self.deplacement, pas_x, pas_y, jeu)
+
     def tir(self, tirs_alien, jeu):
         n = len(self.aliens)
         ind_tireur = randint(0, n - 1)
@@ -198,12 +211,15 @@ class score:
         self.str_score.set('Score:  ' + str(self.int_score))
 
 
-def Clavier(event):
+def deplacer(event):
     touche = event.keysym
     if touche =='Right':
         vaisseau1.deplacement(1, jeu)
     if touche =='Left':
         vaisseau1.deplacement(-1, jeu)
+
+def tirer(event):
+    touche = event.keysym
     if touche =='space':
         vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1)
         
@@ -220,8 +236,6 @@ def Clavier(event):
 #création de la fenêtre
 fenetre = Tk()
 fenetre.title("Space invaders")
-
-
 
 
 #recherche de la photo de fond
@@ -259,11 +273,9 @@ vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 25)
 
-
-
-
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
-jeu.bind('<Key>', Clavier)
+jeu.bind('<Key>', deplacer)
+jeu.bind("<KeyRelease>", tirer)
 fenetre.mainloop()
 
