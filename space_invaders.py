@@ -269,13 +269,24 @@ class protection:
             else :
                 self.XBloc+=30
         
-    def colision(self, jeu):
+    def collision(self, jeu):
         self.coords_bloc = self.jeu.coords(self.Bloc)
         self.elements = self.jeu.find_overlapping(*self.coords_bloc)
         if len(self.elements) > 1:
             for self.element in self.elements:
-                self.jeu.remove(self.element)
+                self.jeu.delete(self.element)
 
+
+
+
+
+
+
+
+###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
+    ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
+    ###self.photo1=PhotoImage(file=self.chemin1)
+    ###self.id_tk= jeu.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
 
 
 
