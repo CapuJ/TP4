@@ -18,15 +18,42 @@ from random import randint
 
 largeur=960
 hauteur=640
-tirs_alien = []
-tirs_vaisseau = []
-score = 0
 taille_vaisseau = 80
 dimensions_vaisseau = (taille_vaisseau, int((250/532)*taille_vaisseau))
 taille_alien = 50
 dimensions_alien = (taille_alien, taille_alien)
 
-
+class space_invaders:
+    def __init__(self, jeu):
+        self.tirs_alien = []
+        self.tirs_vaisseau = []
+        self.vaisseau1 = None
+        self.groupe = None
+        self.boss = None
+        self.jeu = jeu
+    def init_game(self):
+        self.vaisseau1 = vaisseau(self.jeu, dimensions_vaisseau, photo_vaisseau)
+        self.groupe = groupe_aliens(self.jeu, 9, 4, (taille_alien/2), photo_alien)
+        self.boss = super_alien(taille_alien, self.jeu, photo_super_alien)
+    def game_over(self):
+        self.vaisseau1 = None
+        self.groupe = None
+        self.boss = None
+        self.tirs_alien = []
+        self.tirs_vaisseau = []
+        self.jeu.delete('all')
+        self.jeu.create_image(0,0, image=photo, anchor = 'nw')
+        messagebox.showinfo('Game Over', 'Vous avez perdu')
+    def new_game(self):
+        self.vaisseau1 = None
+        self.groupe = None
+        self.boss = None
+        self.tirs_alien = []
+        self.tirs_vaisseau = []
+        self.jeu.delete('all')
+        self.jeu.create_image(0,0, image=photo, anchor = 'nw')
+        self.init_game()
+        
 class alien: 
 #Cette classe met en place toute les doneés liées a l'alien
     def __init__(self, x0, y0, x1, y1, rayon, jeu, photo):
@@ -46,7 +73,7 @@ class alien:
             self.x1 = self.x1 + pas_x * sens
         jeu.coords(self.id_tk, self.x0, self.y0)
     def tir(self, tirs_alien, jeu):
-        tirs_alien += [tir_alien(self, 15, jeu, vaisseau1, vies)]
+        tirs_alien += [tir_alien(self, 15, jeu, partie.vaisseau1, vies)]
     def collision(self, vaisseau):
         return vaisseau.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
 
@@ -65,7 +92,7 @@ class tir_alien:
         collision = self.collision(cible, vies, jeu)
         if self.y0 > hauteur:
             jeu.delete(self.id_tk)
-            tirs_alien.remove(self)
+            partie.tirs_alien.remove(self)
         elif not collision:
             jeu.after(20, self.deplacement, jeu, cible, vies)
     def collision(self, cible, vies, jeu):
@@ -73,10 +100,10 @@ class tir_alien:
         meme_colonne = cible.x0 < self.x < cible.x1
         if meme_colonne and meme_ligne:
             jeu.delete(self.id_tk)
-            tirs_alien.remove(self)
+            partie.tirs_alien.remove(self)
             vies.update()
             if vies.int_vie == 0:
-                game_over(jeu)
+                partie.game_over()
             return True
         return False
 
@@ -117,15 +144,16 @@ class vaisseau:
         self.y1 = hauteur - 5 
         self.charge = True
         self.id_tk = jeu.create_image(self.x0, self.y0, image=photo, anchor='nw')
-    def deplacement(self, sens, jeu):
+    def deplacement(self, sens, jeu, dimensions):
+        largeur_vaisseau, hauteur_vaisseau = dimensions
         self.x0 += sens * 10
         self.x1 += sens * 10
         if self.x0 < 0:
             self.x1 = largeur
-            self.x0 = largeur - 20
+            self.x0 = largeur - largeur_vaisseau
         elif self.x1 > largeur:
             self.x0 = 0
-            self.x1 = 20
+            self.x1 = largeur_vaisseau
         jeu.coords(self.id_tk, self.x0, self.y0)
     def tir(self, tirs_vaisseau, jeu, groupe, score, super_alien):
         if self.charge:
@@ -183,15 +211,15 @@ class groupe_aliens:
         self.sens = 1
         x0 = self.xmin
         y0 = 10 - 2 * rayon_alien
-        for j in range(nb_colonnes):
+        for _ in range(nb_colonnes):
             x0 = self.xmin
             y0 += 2 * rayon_alien + 4
-            for i in range(nb_lignes):
+            for _ in range(nb_lignes):
                 self.aliens += [alien(x0, y0, x0 + (2 * rayon_alien), y0 + (2 * rayon_alien), rayon_alien, jeu, photo)]
                 x0 += 2 * rayon_alien + 4
         jeu.after(20, self.deplacement, 2, 15, jeu)
         delai = randint(2000, 5000)
-        jeu.after(delai, self.tir, tirs_alien, jeu)
+        jeu.after(delai, self.tir, partie.tirs_alien, jeu)
     def deplacement(self, pas_x, pas_y, jeu):
         debordement_g = (self.xmin + self.sens * pas_x < 0)
         debordement_d = (self.xmax + self.sens * pas_x > largeur)
@@ -241,19 +269,15 @@ class score:
         self.str_score.set('Score:  ' + str(self.int_score))
 
 
-def game_over(jeu):
-    jeu.delete('all')
-    messagebox.showinfo('Game Over', 'Vous avez perdu')
-
 
 def Clavier(event):
     touche = event.keysym
     if touche =='Right':
-        vaisseau1.deplacement(1, jeu)
+        partie.vaisseau1.deplacement(1, jeu, dimensions_vaisseau)
     if touche =='Left':
-        vaisseau1.deplacement(-1, jeu)
+        partie.vaisseau1.deplacement(-1, jeu, dimensions_vaisseau)
     if touche =='space':
-        vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1, boss)
+        partie.vaisseau1.tir(partie.tirs_vaisseau, jeu, partie.groupe, score1, partie.boss)
         
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
@@ -295,17 +319,7 @@ jeu = Canvas(fenetre, bg= 'dark blue', width=largeur, height=hauteur)
 jeu.grid(row=1, column= 0, rowspan=2)
 
 #création de l'image de fond sur le canvas
-item= jeu.create_image(0,0, image=photo, anchor = 'nw')
-
-
-
-#création du boutton "Nouveau Jeu"
-bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green") 
-bouton_recommencer.grid(row=1, column=1)
-
-#création du boutton "Quitter le Jeu"
-bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
-bouton_quitter.grid(row=2, column=1)
+item = jeu.create_image(0,0, image=photo, anchor = 'nw')
 
 #création de l'image des aliens
 chemin_alien = os.path.join(os.path.dirname(__file__), "alien.png")
@@ -319,14 +333,21 @@ photo_vaisseau = ImageTk.PhotoImage(charge_image(chemin_vaisseau, dimensions_vai
 chemin_super_alien = os.path.join(os.path.dirname(__file__), "super_alien.png")
 photo_super_alien = ImageTk.PhotoImage(charge_image(chemin_super_alien, dimensions_alien))
 
-vaisseau1 = vaisseau(jeu, dimensions_vaisseau, photo_vaisseau)
-delai = randint(500, 1500)
-groupe = groupe_aliens(jeu, 9, 4, (taille_alien/2), photo_alien)
-boss = super_alien(taille_alien, jeu, photo_super_alien)
+#création de l'image des blocs: 
 
+#Initialisation jeu
 
+partie = space_invaders(jeu)
+partie.init_game()
 
-#fenetre.after(delai, alien1.tir, tirs_alien, jeu)
+#création du boutton "Nouveau Jeu"
+bouton_recommencer = Button(fenetre, text="Nouveau Jeu", activebackground="cyan", background="green", command=partie.new_game) 
+bouton_recommencer.grid(row=1, column=1)
+
+#création du boutton "Quitter le Jeu"
+bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
+bouton_quitter.grid(row=2, column=1)
+
 jeu.focus_set()
 jeu.bind('<Key>', Clavier)
 fenetre.mainloop()
