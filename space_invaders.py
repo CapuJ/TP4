@@ -7,7 +7,6 @@ Interface du jeu Space Invaders
 
 ## Importation des modules nécessaires ##
 
-from email.mime import image
 from PIL import Image, ImageTk
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar
 import os
@@ -331,11 +330,6 @@ def Clavier(event):
     if touche =='space':
         partie.vaisseau1.tir(partie.tirs_vaisseau, jeu, partie.groupe, score1, partie.boss, partie.protections)
         
-
-###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
-    ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
-    ###self.photo1=PhotoImage(file=self.chemin1)
-    ###self.id_tk= jeu.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
 
 
 def charge_image(chemin, dimensions):
