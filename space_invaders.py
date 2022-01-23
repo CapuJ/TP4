@@ -141,9 +141,9 @@ class tir_vaisseau:
                 tirs_vaisseau.remove(self)
                 jeu.delete(alien.id_tk)
                 groupe.aliens.remove(alien)
-                if groupe.aliens == []:
-                    messagebox.showinfo('WINNER', 'Vous avez gagnez')
-                    return True
+                #if groupe.aliens == []:
+                 #   messagebox.showinfo('WINNER', 'Vous avez gagnez')
+                  #  return True
                 score.update()
                 return True
         return False
@@ -246,41 +246,6 @@ def tirer(event):
 
 
 
-#def crea_Bloc(X,Y):
-##cretion d'un bloc
-#    Bloc=jeu.create_image(X,Y,anchor='nw', image=bloc)
-#    return Bloc
-#Blocs=""
-
-#def crea_Ilots():
-# #Création des bloc d'ilots
-#    Blocs=[]
-#    XBloc=45
-#    YBloc=500
-#    for i in range (0,54):  #nombre de repetition des blocs
-#        Blocs.append(crea_Bloc(XBloc,YBloc))
-#        if XBloc==195 or XBloc==510:
-#            XBloc+=135
-#        if XBloc==825:
-#            XBloc=45
-#            YBloc+=30
-#        else :
-#           XBloc+=30
-
-#def collision():
-#    Impact1=jeu.find_overlapping(tirs_alien,tirs_vaisseau)
-#    for i in Impact1:
-#        for i1 in Blocs:
-#            if i==i1:
-#                jeu.delete(i1)
-
-
-
-#bloc=PhotoImage(file='bloc.gif')
-#crea_Ilots()
-
-
-
 class protection:
 
     def __init__(self):
@@ -293,9 +258,7 @@ class protection:
         self.Bloc=jeu.create_image(self.XBloc,self.YBloc,anchor='nw', image=photo)
         return self.Bloc
 
-    
     def crea_Ilots(self, jeu, photo):
-        print(self.Blocs)
         for i in range (0,54):  #nombre de repetition des blocs
             self.Blocs.append(self.crea_Bloc(jeu,  photo))
             if self.XBloc==195 or self.XBloc==510:
@@ -305,19 +268,14 @@ class protection:
                 self.YBloc+=30
             else :
                 self.XBloc+=30
-        print(self.XBloc)
+        
+    def colision(self, jeu):
+        self.coords_bloc = self.jeu.coords(self.Bloc)
+        self.elements = self.jeu.find_overlapping(*self.coords_bloc)
+        if len(self.elements) > 1:
+            for self.element in self.elements:
+                self.jeu.remove(self.element)
 
-
-
-
-
-
-
-
-###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
-    ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
-    ###self.photo1=PhotoImage(file=self.chemin1)
-    ###self.id_tk= jeu.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
 
 
 
