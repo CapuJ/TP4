@@ -77,7 +77,6 @@ class tir_alien:
 
 
 
-
 class vaisseau:
 
     def __init__(self,jeu):
