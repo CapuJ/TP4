@@ -47,6 +47,7 @@ class alien:
     
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu, vaisseau1, vies)]
+        
     def collision(self, vaisseau):
         return vaisseau.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
 
