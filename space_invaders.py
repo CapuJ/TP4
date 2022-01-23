@@ -141,9 +141,9 @@ class tir_vaisseau:
                 tirs_vaisseau.remove(self)
                 jeu.delete(alien.id_tk)
                 groupe.aliens.remove(alien)
-                #if groupe.aliens == []:
-                 #   messagebox.showinfo('WINNER', 'Vous avez gagnez')
-                  #  return True
+                if groupe.aliens == []:
+                    messagebox.showinfo('WINNER', 'Vous avez gagnez')
+                    return True
                 score.update()
                 return True
         return False
