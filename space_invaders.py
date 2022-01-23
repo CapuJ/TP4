@@ -8,7 +8,16 @@ Interface du jeu Space Invaders
 ## Importation des modules nécessaires ##
 
 
+
 from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar
+import os
+from random import randint
+
+from asyncio import wait_for
+from multiprocessing.connection import wait
+from socket import timeout
+import tkinter
+from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage
 import os
 from random import randint
 
@@ -21,7 +30,6 @@ hauteur=640
 tirs_alien = []
 tirs_vaisseau = []
 score = 0
-
 
 
 
@@ -85,9 +93,6 @@ class tir_alien:
 
 
 
-
-
-
 class vaisseau:
 
     def __init__(self,jeu):
@@ -114,6 +119,10 @@ class vaisseau:
             jeu.after(500, self.reload)
     def reload(self):
         self.charge = True
+
+
+
+
 class tir_vaisseau:
     def __init__(self, vaisseau, longueur, jeu, tirs_vaisseau, groupe, score):
         self.x = vaisseau.x0 + 10
@@ -144,6 +153,9 @@ class tir_vaisseau:
                 return True
         return False
         
+
+
+
 class groupe_aliens:
 
     def __init__(self, jeu, nb_lignes, nb_colonnes, rayon_alien):
@@ -195,6 +207,9 @@ class groupe_aliens:
         delai = randint(500, 1500)
         jeu.after(delai, self.tir, tirs_alien, jeu)
 
+
+
+
 class vie:
     def __init__(self):
         self.int_vie = 3
@@ -203,6 +218,10 @@ class vie:
     def update(self):
         self.int_vie -= 1
         self.str_vie.set('Vie:  ' + str(self.int_vie) + '/3')
+
+
+
+
 class score:
     def __init__(self):
         self.int_score = 0
@@ -211,6 +230,8 @@ class score:
     def update(self):
         self.int_score += 10
         self.str_score.set('Score:  ' + str(self.int_score))
+
+
 
 
 def deplacer(event):
@@ -226,26 +247,38 @@ def tirer(event):
         vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1)
 
 
-def crea_Bloc(X,Y):
-#cretion d'un bloc
-    Bloc=jeu.create_image(X,Y,anchor='nw', image=bloc)
-    return Bloc
-Blocs=""
 
-def crea_Ilots():
- #Création des bloc d'ilots
-    Blocs=[]
-    XBloc=45
-    YBloc=500
-    for i in range (0,54):  #nombre de repetition des blocs
-        Blocs.append(crea_Bloc(XBloc,YBloc))
-        if XBloc==195 or XBloc==510:
-            XBloc+=135
-        if XBloc==825:
-            XBloc=45
-            YBloc+=30
-        else :
-            XBloc+=30
+
+
+
+class protection:
+
+    def __init__(self):
+        self.Blocs=[]
+        self.XBloc=45
+        self.YBloc=500
+    
+    def crea_Bloc(self, jeu):
+#cretion d'un bloc
+        img_bloc=PhotoImage(file='bloc.gif')
+        self.Bloc=jeu.create_image(self.XBloc,self.YBloc,anchor=tkinter.NW, image=img_bloc)
+        return self.Bloc
+
+    
+    def crea_Ilots(self, jeu):
+        print(self.Blocs)
+        for i in range (0,54):  #nombre de repetition des blocs
+            self.Blocs.append(self.crea_Bloc(jeu))
+            if self.XBloc==195 or self.XBloc==510:
+               self.XBloc+=135
+            if self.XBloc==825:
+                self.XBloc=45
+                self.YBloc+=30
+            else :
+                self.XBloc+=30
+        print(self.XBloc)
+
+
 
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
@@ -300,8 +333,9 @@ groupe = groupe_aliens(jeu, 9, 4, 25)
 
 
 #création des blocs sur le canvas
-bloc=PhotoImage(file='bloc.gif')
-crea_Ilots()
+img_bloc=PhotoImage(file='bloc.gif')
+variable=protection()
+variable.crea_Ilots(jeu)
 
 
 
