@@ -9,7 +9,7 @@ Interface du jeu Space Invaders
 
 
 
-from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar, Frame, Menubutton
+from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar, Menu, Menubutton, IntVar
 import os
 from random import randint
 from PIL import Image, ImageTk
@@ -282,7 +282,16 @@ class protection:
 
 
 
-
+def menu():
+    fenetre.menuEdit = Menubutton(fenetre,text='Menu', width='20', borderwidth=2, background='darkorange', activebackground='cyan')
+    fenetre.menuEdit.grid(row=0,column=0)
+    fenetre.user_choice = IntVar()
+    fenetre.file_menu = Menu(fenetre.menuEdit, tearoff=0)
+    j = 1
+    for i in choix:
+        S = fenetre.file_menu.add_radiobutton(label=i, variable=fenetre.user_choice, value=i)
+        j += 1
+    fenetre.menuEdit.config(menu=fenetre.file_menu)
 
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
@@ -333,14 +342,12 @@ bouton_quitter.grid(row=2, column=1)
 
 
 
-# Création d'un menu défilant
-menuEdit = Menubutton(text='Menu', width='20', borderwidth=2, background='darkorange', activebackground='cyan')
-menuEdit.grid(row=0,column=0)
 
 
-
-
-
+# Création des choix du menu
+choix = ['A propos', 'Cheat Codes'] 
+#création du boutton menu
+menu()
 
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
@@ -359,4 +366,5 @@ variable.crea_Ilots(jeu, photo_bloc)
 jeu.focus_set()
 jeu.bind('<Key>', deplacer)
 jeu.bind("<KeyRelease>", tirer)
+
 fenetre.mainloop()
