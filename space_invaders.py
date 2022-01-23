@@ -9,7 +9,7 @@ Interface du jeu Space Invaders
 
 
 
-from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar
+from tkinter import Button, Label, Tk, Canvas, messagebox, PhotoImage, StringVar, Frame, Menubutton
 import os
 from random import randint
 from PIL import Image, ImageTk
@@ -47,7 +47,6 @@ class alien:
     
     def tir(self, tirs_alien, jeu):
         tirs_alien += [tir_alien(self, 15, jeu, vaisseau1, vies)]
-        
     def collision(self, vaisseau):
         return vaisseau.y1 < self.y1 < vaisseau.y0 and (vaisseau.x0 <self.x0 < vaisseau.x1) or (vaisseau.x0 < self.x1 < vaisseau.x1)
 
@@ -79,7 +78,7 @@ class tir_alien:
             tirs_alien.remove(self)
             vies.update()
             if vies.int_vie == 0:
-                messagebox.showinfo('Game over', 'Vous avez perdu')
+                messagebox.showinfo('Game over', 'Vous avez perdu...')
             return True
         return False
 
@@ -95,16 +94,18 @@ class vaisseau:
         self.y1 = hauteur - 45
         self.charge = True
         self.id_tk = jeu.create_rectangle(self.x0, self.y0, self.x1, self.y1, fill='cyan')
+
     def deplacement(self, sens, jeu):
         self.x0 += sens * 10
         self.x1 += sens * 10
         if self.x0 < 0:
             self.x1 = largeur
-            self.x0 = largeur - 20
+            self.x0 = largeur - 40
         elif self.x1 > largeur:
             self.x0 = 0
-            self.x1 = 20
+            self.x1 = 40
         jeu.coords(self.id_tk, self.x0, self.y0, self.x1, self.y1)
+
     def tir(self, tirs_vaisseau, jeu, groupe, score):
         if self.charge:
             tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau, groupe, score)]
@@ -143,7 +144,7 @@ class tir_vaisseau:
                 jeu.delete(alien.id_tk)
                 groupe.aliens.remove(alien)
                 if groupe.aliens == []:
-                    messagebox.showinfo('WINNER', 'Vous avez gagnez')
+                    messagebox.showinfo('WINNER', 'Vous avez gagnez!')
                     return True
                 score.update()
                 return True
@@ -255,7 +256,7 @@ class protection:
         self.YBloc=500
     
     def crea_Bloc(self, jeu, photo):
-#cretion d'un bloc
+#creation d'un bloc
         self.Bloc=jeu.create_image(self.XBloc,self.YBloc,anchor='nw', image=photo)
         return self.Bloc
 
@@ -288,6 +289,7 @@ class protection:
     ###self.chemin1 = os.path.join(os.path.dirname(__file__), "alien.gif")
     ###self.photo1=PhotoImage(file=self.chemin1)
     ###self.id_tk= jeu.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
+
 
 
 
@@ -329,6 +331,17 @@ bouton_recommencer.grid(row=1, column=1)
 bouton_quitter = Button(fenetre, text="Quitter le jeu", activebackground="cyan", background="red", command=fenetre.destroy)
 bouton_quitter.grid(row=2, column=1)
 
+
+
+# Création d'un menu défilant
+menuEdit = Menubutton(text='Menu', width='20', borderwidth=2, background='darkorange', activebackground='cyan')
+menuEdit.grid(row=0,column=0)
+
+
+
+
+
+
 vaisseau1 = vaisseau(jeu)
 delai = randint(2000, 5000)
 groupe = groupe_aliens(jeu, 9, 4, 25)
@@ -341,8 +354,6 @@ image_bloc = Image.open(chemin_bloc)
 photo_bloc = ImageTk.PhotoImage(image_bloc)
 variable=protection()
 variable.crea_Ilots(jeu, photo_bloc)
-
-
 
 #fenetre.after(delai, alien1.tir, tirs_alien, jeu)
 jeu.focus_set()
