@@ -249,6 +249,39 @@ def tirer(event):
 
 
 
+#def crea_Bloc(X,Y):
+##cretion d'un bloc
+#    Bloc=jeu.create_image(X,Y,anchor='nw', image=bloc)
+#    return Bloc
+#Blocs=""
+
+#def crea_Ilots():
+# #Création des bloc d'ilots
+#    Blocs=[]
+#    XBloc=45
+#    YBloc=500
+#    for i in range (0,54):  #nombre de repetition des blocs
+#        Blocs.append(crea_Bloc(XBloc,YBloc))
+#        if XBloc==195 or XBloc==510:
+#            XBloc+=135
+#        if XBloc==825:
+#            XBloc=45
+#            YBloc+=30
+#        else :
+#           XBloc+=30
+
+#def collision():
+#    Impact1=jeu.find_overlapping(tirs_alien,tirs_vaisseau)
+#    for i in Impact1:
+#        for i1 in Blocs:
+#            if i==i1:
+#                jeu.delete(i1)
+
+
+
+#bloc=PhotoImage(file='bloc.gif')
+#crea_Ilots()
+
 
 
 class protection:
@@ -277,6 +310,10 @@ class protection:
             else :
                 self.XBloc+=30
         print(self.XBloc)
+
+
+
+
 
 
 
@@ -333,7 +370,7 @@ groupe = groupe_aliens(jeu, 9, 4, 25)
 
 
 #création des blocs sur le canvas
-img_bloc=PhotoImage(file='bloc.gif')
+
 variable=protection()
 variable.crea_Ilots(jeu)
 
