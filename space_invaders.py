@@ -76,12 +76,37 @@ class tir_alien:
             tirs_alien.remove(self)
             vies.update()
             if vies.int_vie == 0:
-                messagebox.showinfo('Game over', 'Vous avez perdu')
+                game_over(jeu)
             return True
         return False
 
 
 
+class super_alien:
+    def __init__(self, taille, jeu, photo):
+        self.x0 = largeur/2 - taille/2
+        self.y0 = -10 - taille
+        self.x1 = self.x0 + taille
+        self.y1 = self.y0 + taille
+        self.id_tk = jeu.create_image(self.x0, self.y0, image=photo, anchor='nw')
+        jeu.after(10000, self.descente, jeu, 2)
+    def descente(self, jeu, pas):
+        self.y0 += pas
+        self.y1 += pas
+        jeu.coords(self.id_tk, self.x0, self.y0)
+        if self.y0 < 10:
+            jeu.after(20, self.descente, jeu, pas)
+        else:
+            jeu.after(20, self.deplacement, jeu, pas, 1)
+    def deplacement(self, jeu, pas, sens):
+        debordement_d = (self.x0 + pas * sens < 0)
+        debordement_g = (self.x1 + pas * sens > largeur)
+        if debordement_d or debordement_g:
+            sens *= -1
+        self.x0 = self.x0 + pas * sens
+        self.x1 = self.x1 + pas * sens
+        jeu.coords(self.id_tk, self.x0, self.y0)
+        jeu.after(10, self.deplacement, jeu, pas, sens)
 
 class vaisseau:
     def __init__(self, jeu, dimensions, photo):
@@ -102,32 +127,32 @@ class vaisseau:
             self.x0 = 0
             self.x1 = 20
         jeu.coords(self.id_tk, self.x0, self.y0)
-    def tir(self, tirs_vaisseau, jeu, groupe, score):
+    def tir(self, tirs_vaisseau, jeu, groupe, score, super_alien):
         if self.charge:
-            tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau, groupe, score)]
+            tirs_vaisseau += [tir_vaisseau(self, 20, jeu, tirs_vaisseau, groupe, score, super_alien)]
             self.charge = False
             jeu.after(500, self.reload)
     def reload(self):
         self.charge = True
 
 class tir_vaisseau:
-    def __init__(self, vaisseau, longueur, jeu, tirs_vaisseau, groupe, score):
+    def __init__(self, vaisseau, longueur, jeu, tirs_vaisseau, groupe, score, super_alien):
         self.x = vaisseau.x0 + taille_vaisseau/2   
         self.y0 = vaisseau.y0 - longueur
         self.y1 = vaisseau.y0
         self.id_tk = jeu.create_line(self.x, self.y0, self.x, self.y1, fill="red")
-        self.deplacement(jeu, tirs_vaisseau, groupe, score)
-    def deplacement(self, jeu, tirs_vaisseau, groupe, score):
+        self.deplacement(jeu, tirs_vaisseau, groupe, score, super_alien)
+    def deplacement(self, jeu, tirs_vaisseau, groupe, score, super_alien):
         self.y0 -= 10
         self.y1 -= 10
         jeu.coords(self.id_tk, self.x, self.y0, self.x, self.y1)
-        collision = self.collision(groupe, tirs_vaisseau, jeu, score)
+        collision = self.collision(groupe, tirs_vaisseau, jeu, score, super_alien)
         if self.y0 < 0:
             jeu.delete(self.id_tk)
             tirs_vaisseau.remove(self)
         elif not collision:
-            jeu.after(20, self.deplacement, jeu, tirs_vaisseau, groupe, score)
-    def collision(self, groupe, tirs_vaisseau, jeu, score):
+            jeu.after(20, self.deplacement, jeu, tirs_vaisseau, groupe, score, super_alien)
+    def collision(self, groupe, tirs_vaisseau, jeu, score, super_alien):
         for alien in groupe.aliens:
             meme_ligne = alien.y0 < self.y0 < alien.y1
             meme_colonne = alien.x0 < self.x < alien.x1
@@ -136,8 +161,18 @@ class tir_vaisseau:
                 tirs_vaisseau.remove(self)
                 jeu.delete(alien.id_tk)
                 groupe.aliens.remove(alien)
-                score.update()
+                score.update(10)
                 return True
+        meme_ligne = super_alien.y0 < self.y0 < super_alien.y1
+        meme_colonne = super_alien.x0 < self.x < super_alien.x1
+        if meme_colonne and meme_ligne:
+            jeu.delete(self.id_tk)
+            tirs_vaisseau.remove(self)
+            jeu.delete(super_alien.id_tk)
+            super_alien.y0 -= 100
+            super_alien.y1 -= 100
+            score.update(150)
+            return True
         return False
         
 class groupe_aliens:
@@ -201,9 +236,14 @@ class score:
         self.int_score = 0
         self.str_score = StringVar()
         self.str_score.set('Score:  ' + str(self.int_score))
-    def update(self):
-        self.int_score += 10
+    def update(self, points):
+        self.int_score += points
         self.str_score.set('Score:  ' + str(self.int_score))
+
+
+def game_over(jeu):
+    jeu.delete('all')
+    messagebox.showinfo('Game Over', 'Vous avez perdu')
 
 
 def Clavier(event):
@@ -213,7 +253,7 @@ def Clavier(event):
     if touche =='Left':
         vaisseau1.deplacement(-1, jeu)
     if touche =='space':
-        vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1)
+        vaisseau1.tir(tirs_vaisseau, jeu, groupe, score1, boss)
         
 
 ###def Forme() #il prenne la forme de base du vaisseau et mette une photo dessus
@@ -275,10 +315,14 @@ photo_alien = ImageTk.PhotoImage(charge_image(chemin_alien, dimensions_alien))
 chemin_vaisseau = os.path.join(os.path.dirname(__file__), "vaisseau.png")
 photo_vaisseau = ImageTk.PhotoImage(charge_image(chemin_vaisseau, dimensions_vaisseau))
 
+#Création de l'image du boss 
+chemin_super_alien = os.path.join(os.path.dirname(__file__), "super_alien.png")
+photo_super_alien = ImageTk.PhotoImage(charge_image(chemin_super_alien, dimensions_alien))
+
 vaisseau1 = vaisseau(jeu, dimensions_vaisseau, photo_vaisseau)
 delai = randint(500, 1500)
 groupe = groupe_aliens(jeu, 9, 4, (taille_alien/2), photo_alien)
-
+boss = super_alien(taille_alien, jeu, photo_super_alien)
 
 
 
