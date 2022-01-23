@@ -141,9 +141,14 @@ class tir_vaisseau:
                 tirs_vaisseau.remove(self)
                 jeu.delete(alien.id_tk)
                 groupe.aliens.remove(alien)
+                if groupe.aliens == []:
+                    messagebox.showinfo('Game over', 'Vous avez perdu')
+                    return True
                 score.update()
                 return True
         return False
+        
+    
         
 
 
@@ -199,7 +204,7 @@ class groupe_aliens:
         delai = randint(500, 1500)
         jeu.after(delai, self.tir, tirs_alien, jeu)
 
-
+ 
 
 
 class vie:
