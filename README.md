@@ -18,8 +18,8 @@ La méthode déplacement (qui vérifie que l'alien ne dépasse pas la fenêtre) 
 
 La cinquième classe est la classe "groupe_aliens". Cette classe permet de créer un groupe d'aliens définis par le nombre de rang et de colonnes d'alien et par les tirs. Les tirs sont programmés pour partir de n'importe quel alien sur un temps aléatoire.
 
-La sixieme classe est la classe "vie". Cette classe permet de calculer et d'afficher le nombre de vies du vaisseau. Le nombre de vies diminue en fonction du nombre de collisions avec les tirs des aliens.
+La sixième classe est la classe "vie". Cette classe permet de calculer et d'afficher le nombre de vies du vaisseau. Le nombre de vies diminue en fonction du nombre de collisions avec les tirs des aliens.
 
-La septieme classe est la classe "score". Cette classe permet de calculer et d'afficher le score. Le score augmente en fonction du nombre d'aliens touchés par les tirs du vaisseau.
+La septième classe est la classe "score". Cette classe permet de calculer et d'afficher le score. Le score augmente en fonction du nombre d'aliens touchés par les tirs du vaisseau.
 
-La huitieme classe est la classe "protection". Cette classe permet de créer des groupes ("ilots") qui permettent de protéger le vaisseau des tirs des aliens.                            
+La huitième classe est la classe "protection". Cette classe permet de créer des groupes ("ilots") qui permettent de protéger le vaisseau des tirs des aliens.                            
